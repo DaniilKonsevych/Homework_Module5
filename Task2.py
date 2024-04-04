@@ -1,13 +1,24 @@
-def generator_numbers(text: str):
-    for i in text.split():
-        try:
-            yield float(i)
-        except:
-            yield 0.0
+import re
+
+def checking_generator():
+    checking = []
+
+    def generator_numbers(text: str):
+        number = re.search(r"\d+\.\d+", text).group()
+        while number in checking:
+            text = text.replace(number, "")
+            number = re.search(r'\d+\.\d+', text).group()
+        else:
+            checking.append(number)
+            yield float(number)
+    
+    return generator_numbers
+
+generator_numbers = checking_generator()
 
 def sum_profit(text: str, func: callable):
     profits = []
-    for str_object in text.split():
+    for i in re.findall(r'\d+\.\d+', text):
         profits.append(next(func(text)))
     return sum(profits)
 
